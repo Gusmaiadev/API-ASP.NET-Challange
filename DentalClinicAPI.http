@@ -1,0 +1,6 @@
+@DentalClinicAPI_HostAddress = http://localhost:5236
+
+GET {{DentalClinicAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
