@@ -1,6 +1,6 @@
 [
   {
-    "ContainingType": "AppointmentsController",
+    "ContainingType": "DentalClinicAPI.Controllers.AppointmentsController",
     "Method": "GetAll",
     "RelativePath": "api/Appointments",
     "HttpMethod": "GET",
@@ -10,7 +10,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "AppointmentsController",
+    "ContainingType": "DentalClinicAPI.Controllers.AppointmentsController",
     "Method": "Create",
     "RelativePath": "api/Appointments",
     "HttpMethod": "POST",
@@ -18,15 +18,15 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "appointment",
-        "Type": "DentalClinicAPI.Models.Appointment",
+        "Name": "dto",
+        "Type": "DentalClinicAPI.DTOs.AppointmentCreateDTO",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "AppointmentsController",
+    "ContainingType": "DentalClinicAPI.Controllers.AppointmentsController",
     "Method": "GetById",
     "RelativePath": "api/Appointments/{id}",
     "HttpMethod": "GET",
@@ -42,7 +42,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "AppointmentsController",
+    "ContainingType": "DentalClinicAPI.Controllers.AppointmentsController",
     "Method": "Update",
     "RelativePath": "api/Appointments/{id}",
     "HttpMethod": "PUT",
@@ -55,15 +55,15 @@
         "IsRequired": true
       },
       {
-        "Name": "appointment",
-        "Type": "DentalClinicAPI.Models.Appointment",
+        "Name": "dto",
+        "Type": "DentalClinicAPI.DTOs.AppointmentCreateDTO",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "AppointmentsController",
+    "ContainingType": "DentalClinicAPI.Controllers.AppointmentsController",
     "Method": "Delete",
     "RelativePath": "api/Appointments/{id}",
     "HttpMethod": "DELETE",
@@ -79,7 +79,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "AppointmentsController",
+    "ContainingType": "DentalClinicAPI.Controllers.AppointmentsController",
     "Method": "GetByDate",
     "RelativePath": "api/Appointments/by-date/{date}",
     "HttpMethod": "GET",
@@ -88,14 +88,14 @@
     "Parameters": [
       {
         "Name": "date",
-        "Type": "System.DateTime",
+        "Type": "System.String",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "DentistsController",
+    "ContainingType": "DentalClinicAPI.Controllers.DentistsController",
     "Method": "GetAll",
     "RelativePath": "api/Dentists",
     "HttpMethod": "GET",
@@ -105,7 +105,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "DentistsController",
+    "ContainingType": "DentalClinicAPI.Controllers.DentistsController",
     "Method": "Create",
     "RelativePath": "api/Dentists",
     "HttpMethod": "POST",
@@ -113,15 +113,15 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "dentist",
-        "Type": "DentalClinicAPI.Models.Dentist",
+        "Name": "dto",
+        "Type": "DentalClinicAPI.DTOs.DentistCreateDTO",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "DentistsController",
+    "ContainingType": "DentalClinicAPI.Controllers.DentistsController",
     "Method": "GetById",
     "RelativePath": "api/Dentists/{id}",
     "HttpMethod": "GET",
@@ -137,7 +137,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "DentistsController",
+    "ContainingType": "DentalClinicAPI.Controllers.DentistsController",
     "Method": "Update",
     "RelativePath": "api/Dentists/{id}",
     "HttpMethod": "PUT",
@@ -150,15 +150,15 @@
         "IsRequired": true
       },
       {
-        "Name": "dentist",
-        "Type": "DentalClinicAPI.Models.Dentist",
+        "Name": "dto",
+        "Type": "DentalClinicAPI.DTOs.DentistCreateDTO",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "DentistsController",
+    "ContainingType": "DentalClinicAPI.Controllers.DentistsController",
     "Method": "Delete",
     "RelativePath": "api/Dentists/{id}",
     "HttpMethod": "DELETE",
@@ -174,7 +174,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "PatientsController",
+    "ContainingType": "DentalClinicAPI.Controllers.PatientsController",
     "Method": "GetAll",
     "RelativePath": "api/Patients",
     "HttpMethod": "GET",
@@ -184,7 +184,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "PatientsController",
+    "ContainingType": "DentalClinicAPI.Controllers.PatientsController",
     "Method": "Create",
     "RelativePath": "api/Patients",
     "HttpMethod": "POST",
@@ -192,18 +192,55 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "patient",
-        "Type": "DentalClinicAPI.Models.Patient",
+        "Name": "dto",
+        "Type": "DentalClinicAPI.DTOs.PatientCreateDTO",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "PatientsController",
+    "ContainingType": "DentalClinicAPI.Controllers.PatientsController",
     "Method": "GetById",
     "RelativePath": "api/Patients/{id}",
     "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DentalClinicAPI.Controllers.PatientsController",
+    "Method": "Update",
+    "RelativePath": "api/Patients/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "DentalClinicAPI.DTOs.PatientCreateDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DentalClinicAPI.Controllers.PatientsController",
+    "Method": "Delete",
+    "RelativePath": "api/Patients/{id}",
+    "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [

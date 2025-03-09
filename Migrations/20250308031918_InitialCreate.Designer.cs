@@ -12,7 +12,7 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace DentalClinicAPI.Migrations
 {
     [DbContext(typeof(ClinicContext))]
-    [Migration("20250307041258_InitialCreate")]
+    [Migration("20250308031918_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

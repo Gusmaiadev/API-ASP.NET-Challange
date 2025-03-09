@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DentalClinicAPI</name>
+    </assembly>
+    <members>
+        <member name="M:DentalClinicAPI.Controllers.AppointmentsController.GetAll">
+            <summary>
+            Obtém todos os agendamentos
+            </summary>
+            <returns>Lista de agendamentos</returns>
+        </member>
+        <member name="M:DentalClinicAPI.Controllers.AppointmentsController.GetById(System.Int32)">
+            <summary>
+            Obtém agendamento por ID
+            </summary>
+            <param name="id">ID do agendamento</param>
+            <returns>Detalhes do agendamento</returns>
+        </member>
+        <member name="M:DentalClinicAPI.Controllers.AppointmentsController.Create(DentalClinicAPI.DTOs.AppointmentCreateDTO)">
+            <summary>
+            Cria um novo agendamento
+            </summary>
+            <param name="dto">Dados do agendamento</param>
+            <returns>Agendamento criado</returns>
+        </member>
+        <member name="M:DentalClinicAPI.Controllers.AppointmentsController.Update(System.Int32,DentalClinicAPI.DTOs.AppointmentCreateDTO)">
+            <summary>
+            Atualiza um agendamento existente
+            </summary>
+            <param name="id">ID do agendamento</param>
+            <param name="dto">Novos dados do agendamento</param>
+            <returns>Status 204 No Content</returns>
+        </member>
+        <member name="M:DentalClinicAPI.Controllers.AppointmentsController.Delete(System.Int32)">
+            <summary>
+            Exclui um agendamento
+            </summary>
+            <param name="id">ID do agendamento</param>
+            <returns>Status 204 No Content</returns>
+        </member>
+        <member name="M:DentalClinicAPI.Controllers.AppointmentsController.GetByDate(System.String)">
+            <summary>
+            Obtém agendamentos por data
+            </summary>
+            <param name="date">Data no formato yyyy-MM-dd</param>
+            <returns>Lista de agendamentos</returns>
+        </member>
+        <member name="M:DentalClinicAPI.Controllers.DentistsController.GetAll">
+            <summary>
+            Obtém todos os dentistas
+            </summary>
+            <returns>Lista de dentistas</returns>
+        </member>
+        <member name="M:DentalClinicAPI.Controllers.DentistsController.GetById(System.Int32)">
+            <summary>
+            Obtém dentista por ID
+            </summary>
+            <param name="id">ID do dentista</param>
+            <returns>Dados do dentista</returns>
+        </member>
+        <member name="M:DentalClinicAPI.Controllers.DentistsController.Create(DentalClinicAPI.DTOs.DentistCreateDTO)">
+            <summary>
+            Cria um novo dentista
+            </summary>
+            <param name="dto">Dados do dentista (excluindo ID)</param>
+            <returns>Dentista criado</returns>
+        </member>
+        <member name="M:DentalClinicAPI.Controllers.DentistsController.Update(System.Int32,DentalClinicAPI.DTOs.DentistCreateDTO)">
+            <summary>
+            Atualiza um dentista existente
+            </summary>
+            <param name="id">ID do dentista</param>
+            <param name="dto">Novos dados do dentista</param>
+            <returns>Status 204 No Content</returns>
+        </member>
+        <member name="M:DentalClinicAPI.Controllers.DentistsController.Delete(System.Int32)">
+            <summary>
+            Exclui um dentista
+            </summary>
+            <param name="id">ID do dentista</param>
+            <returns>Status 204 No Content</returns>
+        </member>
+        <member name="M:DentalClinicAPI.Controllers.PatientsController.GetAll">
+            <summary>
+            Obtém todos os pacientes
+            </summary>
+            <returns>Lista de pacientes</returns>
+        </member>
+        <member name="M:DentalClinicAPI.Controllers.PatientsController.GetById(System.Int32)">
+            <summary>
+            Obtém paciente por ID
+            </summary>
+            <param name="id">ID do paciente</param>
+            <returns>Dados do paciente</returns>
+        </member>
+        <member name="M:DentalClinicAPI.Controllers.PatientsController.Create(DentalClinicAPI.DTOs.PatientCreateDTO)">
+            <summary>
+            Cria um novo paciente
+            </summary>
+            <param name="dto">Dados do paciente (excluindo ID)</param>
+            <returns>Paciente criado</returns>
+        </member>
+        <member name="M:DentalClinicAPI.Controllers.PatientsController.Update(System.Int32,DentalClinicAPI.DTOs.PatientCreateDTO)">
+            <summary>
+            Atualiza um paciente existente
+            </summary>
+            <param name="id">ID do paciente</param>
+            <param name="dto">Novos dados do paciente</param>
+            <returns>Status 204 No Content</returns>
+        </member>
+        <member name="M:DentalClinicAPI.Controllers.PatientsController.Delete(System.Int32)">
+            <summary>
+            Exclui um paciente
+            </summary>
+            <param name="id">ID do paciente</param>
+            <returns>Status 204 No Content</returns>
+        </member>
+        <member name="T:DentalClinicAPI.Migrations.InitialCreate">
+            <inheritdoc />
+        </member>
+        <member name="M:DentalClinicAPI.Migrations.InitialCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:DentalClinicAPI.Migrations.InitialCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:DentalClinicAPI.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

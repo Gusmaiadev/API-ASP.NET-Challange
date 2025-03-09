@@ -1,11 +1,16 @@
 C:\Users\Gustavo\source\repos\DentalClinicAPI\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\Gustavo\source\repos\DentalClinicAPI\bin\Debug\net8.0\appsettings.json
 C:\Users\Gustavo\source\repos\DentalClinicAPI\bin\Debug\net8.0\DentalClinicAPI.exe
+C:\Users\Gustavo\source\repos\DentalClinicAPI\bin\Debug\net8.0\DentalClinicAPI.xml
 C:\Users\Gustavo\source\repos\DentalClinicAPI\bin\Debug\net8.0\DentalClinicAPI.deps.json
 C:\Users\Gustavo\source\repos\DentalClinicAPI\bin\Debug\net8.0\DentalClinicAPI.runtimeconfig.json
 C:\Users\Gustavo\source\repos\DentalClinicAPI\bin\Debug\net8.0\DentalClinicAPI.dll
 C:\Users\Gustavo\source\repos\DentalClinicAPI\bin\Debug\net8.0\DentalClinicAPI.pdb
+C:\Users\Gustavo\source\repos\DentalClinicAPI\bin\Debug\net8.0\AutoMapper.dll
+C:\Users\Gustavo\source\repos\DentalClinicAPI\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 C:\Users\Gustavo\source\repos\DentalClinicAPI\bin\Debug\net8.0\Humanizer.dll
+C:\Users\Gustavo\source\repos\DentalClinicAPI\bin\Debug\net8.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\Gustavo\source\repos\DentalClinicAPI\bin\Debug\net8.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 C:\Users\Gustavo\source\repos\DentalClinicAPI\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
 C:\Users\Gustavo\source\repos\DentalClinicAPI\bin\Debug\net8.0\Microsoft.Build.Locator.dll
 C:\Users\Gustavo\source\repos\DentalClinicAPI\bin\Debug\net8.0\Microsoft.CodeAnalysis.dll
@@ -30,8 +35,11 @@ C:\Users\Gustavo\source\repos\DentalClinicAPI\bin\Debug\net8.0\Microsoft.Extensi
 C:\Users\Gustavo\source\repos\DentalClinicAPI\bin\Debug\net8.0\Microsoft.Extensions.Primitives.dll
 C:\Users\Gustavo\source\repos\DentalClinicAPI\bin\Debug\net8.0\Microsoft.OpenApi.dll
 C:\Users\Gustavo\source\repos\DentalClinicAPI\bin\Debug\net8.0\Mono.TextTemplating.dll
+C:\Users\Gustavo\source\repos\DentalClinicAPI\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\Gustavo\source\repos\DentalClinicAPI\bin\Debug\net8.0\Newtonsoft.Json.Bson.dll
 C:\Users\Gustavo\source\repos\DentalClinicAPI\bin\Debug\net8.0\Oracle.EntityFrameworkCore.dll
 C:\Users\Gustavo\source\repos\DentalClinicAPI\bin\Debug\net8.0\Oracle.ManagedDataAccess.dll
+C:\Users\Gustavo\source\repos\DentalClinicAPI\bin\Debug\net8.0\Swashbuckle.AspNetCore.Annotations.dll
 C:\Users\Gustavo\source\repos\DentalClinicAPI\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\Gustavo\source\repos\DentalClinicAPI\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\Gustavo\source\repos\DentalClinicAPI\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
@@ -126,6 +134,7 @@ C:\Users\Gustavo\source\repos\DentalClinicAPI\obj\Debug\net8.0\DentalClinicAPI.A
 C:\Users\Gustavo\source\repos\DentalClinicAPI\obj\Debug\net8.0\DentalClinicAPI.csproj.CoreCompileInputs.cache
 C:\Users\Gustavo\source\repos\DentalClinicAPI\obj\Debug\net8.0\DentalClinicAPI.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\Gustavo\source\repos\DentalClinicAPI\obj\Debug\net8.0\DentalClinicAPI.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Gustavo\source\repos\DentalClinicAPI\obj\Debug\net8.0\DentalClinicAPI.sourcelink.json
 C:\Users\Gustavo\source\repos\DentalClinicAPI\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\Gustavo\source\repos\DentalClinicAPI\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\Gustavo\source\repos\DentalClinicAPI\obj\Debug\net8.0\staticwebassets\msbuild.DentalClinicAPI.Microsoft.AspNetCore.StaticWebAssets.props

@@ -1,4 +1,5 @@
 ﻿namespace DentalClinicAPI.Models;
+using Newtonsoft.Json;
 
 public class Appointment
 {
@@ -6,7 +7,11 @@ public class Appointment
     public DateTime Date { get; set; }
     public string Procedure { get; set; } = string.Empty;
     public int PatientId { get; set; }
-    public Patient Patient { get; set; } = new Patient();
     public int DentistId { get; set; }
-    public Dentist Dentist { get; set; } = new Dentist();
+
+    [Newtonsoft.Json.JsonIgnore]
+    public Patient Patient { get; set; } = null!;
+
+    [Newtonsoft.Json.JsonIgnore]
+    public Dentist Dentist { get; set; } = null!;
 }

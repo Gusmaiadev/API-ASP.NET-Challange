@@ -1,58 +1,98 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using DentalClinicAPI.DTOs;
 using DentalClinicAPI.Models;
 using DentalClinicAPI.Repositories;
+using AutoMapper;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
-[ApiController]
-[Route("api/[controller]")]
-public class DentistsController : ControllerBase
+namespace DentalClinicAPI.Controllers
 {
-    private readonly IRepository<Dentist> _dentistRepo;
-
-    public DentistsController(IRepository<Dentist> dentistRepo)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class DentistsController : ControllerBase
     {
-        _dentistRepo = dentistRepo;
-    }
+        private readonly IRepository<Dentist> _dentistRepo;
+        private readonly IMapper _mapper;
 
-    // GET: api/dentists
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
-    {
-        var dentists = await _dentistRepo.GetAll();
-        return Ok(dentists);
-    }
+        public DentistsController(IRepository<Dentist> dentistRepo, IMapper mapper)
+        {
+            _dentistRepo = dentistRepo;
+            _mapper = mapper;
+        }
 
-    // GET: api/dentists/5
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(int id)
-    {
-        var dentist = await _dentistRepo.GetById(id);
-        if (dentist == null) return NotFound();
-        return Ok(dentist);
-    }
+        /// <summary>
+        /// Obtém todos os dentistas
+        /// </summary>
+        /// <returns>Lista de dentistas</returns>
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var dentists = await _dentistRepo.GetAll();
+            return Ok(_mapper.Map<IEnumerable<DentistReadDTO>>(dentists));
+        }
 
-    // POST: api/dentists
-    [HttpPost]
-    public async Task<IActionResult> Create(Dentist dentist)
-    {
-        await _dentistRepo.Create(dentist);
-        return CreatedAtAction(nameof(GetById), new { id = dentist.Id }, dentist);
-    }
+        /// <summary>
+        /// Obtém dentista por ID
+        /// </summary>
+        /// <param name="id">ID do dentista</param>
+        /// <returns>Dados do dentista</returns>
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var dentist = await _dentistRepo.GetById(id);
+            if (dentist == null) return NotFound();
 
-    // PUT: api/dentists/5
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, Dentist dentist)
-    {
-        if (id != dentist.Id) return BadRequest();
-        await _dentistRepo.Update(dentist);
-        return NoContent();
-    }
+            return Ok(_mapper.Map<DentistReadDTO>(dentist));
+        }
 
-    // DELETE: api/dentists/5
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
-    {
-        await _dentistRepo.Delete(id);
-        return NoContent();
+        /// <summary>
+        /// Cria um novo dentista
+        /// </summary>
+        /// <param name="dto">Dados do dentista (excluindo ID)</param>
+        /// <returns>Dentista criado</returns>
+        [HttpPost]
+        public async Task<IActionResult> Create(DentistCreateDTO dto)
+        {
+            var dentist = _mapper.Map<Dentist>(dto);
+            await _dentistRepo.Create(dentist);
+
+            return CreatedAtAction(
+                nameof(GetById),
+                new { id = dentist.Id },
+                _mapper.Map<DentistReadDTO>(dentist)
+            );
+        }
+
+        /// <summary>
+        /// Atualiza um dentista existente
+        /// </summary>
+        /// <param name="id">ID do dentista</param>
+        /// <param name="dto">Novos dados do dentista</param>
+        /// <returns>Status 204 No Content</returns>
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, DentistCreateDTO dto)
+        {
+            var existingDentist = await _dentistRepo.GetById(id);
+            if (existingDentist == null) return NotFound();
+
+            // Atualiza apenas os campos permitidos
+            _mapper.Map(dto, existingDentist);
+            await _dentistRepo.Update(existingDentist);
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Exclui um dentista
+        /// </summary>
+        /// <param name="id">ID do dentista</param>
+        /// <returns>Status 204 No Content</returns>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _dentistRepo.Delete(id);
+            return NoContent();
+        }
     }
 }
