@@ -112,9 +112,9 @@ http://localhost:5000/swagger
 - Implementar cache para otimização de desempenho.
 
 ## 👥 Grupo
-**Nome:** Gustavo Araújo Maia **RM:** 553270
-**Nome:** Rafael Vida Fernandes **RM:** 553721
-**Nome:** Kauã Almeida Silveira **RM:** 552618
+- **Nome:** Gustavo Araújo Maia **RM:** 553270
+- **Nome:** Rafael Vida Fernandes **RM:** 553721
+- **Nome:** Kauã Almeida Silveira **RM:** 552618
 
 
 
