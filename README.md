@@ -111,8 +111,11 @@ http://localhost:5000/swagger
 - Criar testes unitários e de integração.
 - Implementar cache para otimização de desempenho.
 
-## 📢 Contato
-Se precisar de ajuda, entre em contato pelo e-mail **seuemail@exemplo.com** ou abra uma issue no repositório!
+## 👥 Grupo
+**Nome:** Gustavo Araújo Maia **RM:** 553270
+**Nome:** Rafael Vida Fernandes **RM:** 553721
+**Nome:** Kauã Almeida Silveira **RM:** 552618
+
 
 
 
