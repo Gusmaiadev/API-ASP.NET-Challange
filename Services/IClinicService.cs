@@ -1,10 +1,23 @@
-﻿using DentalClinicAPI.Models;        // Adicione esta linha
-using System.Collections.Generic;
-using System.Threading.Tasks;
-namespace DentalClinicAPI.Services;
-public interface IClinicService
+﻿using DentalClinicAPI.Models;
+
+namespace DentalClinicAPI.Services
 {
-    Task<bool> IsDentistAvailable(int dentistId, DateTime date);
-    Task<bool> PatientExists(int patientId);
-    Task<List<Appointment>> GetAppointmentsByDate(DateTime date);
+    // Interface para verificações
+    public interface IAvailabilityService
+    {
+        Task<bool> IsDentistAvailable(int dentistId, DateTime date);
+        Task<bool> PatientExists(int patientId);
+    }
+
+    // Interface para operações de agendamento
+    public interface IAppointmentService
+    {
+        Task<List<Appointment>> GetAppointmentsByDate(DateTime date);
+        Task<bool> IsAppointmentTimeValid(DateTime appointmentTime);
+    }
+
+    // Interface combinada para o serviço da clínica
+    public interface IClinicService : IAvailabilityService, IAppointmentService
+    {
+    }
 }

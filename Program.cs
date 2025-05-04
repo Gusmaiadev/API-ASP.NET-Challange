@@ -3,111 +3,155 @@ using DentalClinicAPI.Data;
 using DentalClinicAPI.Repositories;
 using DentalClinicAPI.Services;
 using DentalClinicAPI.Mappings;
-using AutoMapper;
-using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
-using System.Reflection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Configuração do Entity Framework Core com Oracle
-builder.Services.AddDbContext<ClinicContext>(options =>
-    options.UseOracle(builder.Configuration.GetConnectionString("OracleConnection")));
-
-// 2. Configuração do AutoMapper
-builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
-
-// 3. Registra repositórios genéricos
-builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-
-// 4. Registra serviços
-builder.Services.AddScoped<IClinicService, ClinicService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-
-// 5. Configuração do JWT
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options => {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-                .GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
-            ValidateIssuer = false,
-            ValidateAudience = false
-        };
-    });
-
-// 6. Configuração de controllers com Newtonsoft.Json
-builder.Services.AddControllers()
-    .AddNewtonsoftJson();
-
-// 7. Configuração do Swagger com documentação XML
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new() { Title = "Dental Clinic API", Version = "v1" });
-    c.EnableAnnotations(); // Para suporte a XML comments
-
-    // Configuração do arquivo XML de documentação
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    c.IncludeXmlComments(xmlPath);
-
-    // Adicionar configuração para incluir o token JWT no Swagger UI
-    c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-    {
-        Name = "Authorization",
-        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
-        Scheme = "Bearer",
-        BearerFormat = "JWT",
-        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-        Description = "JWT Authorization header usando o esquema Bearer. \r\n\r\n Digite 'Bearer' [espaço] e seu token.\r\n\r\nExemplo: \"Bearer 12345abcdef\""
-    });
-
-    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
-    {
-        {
-            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-            {
-                Reference = new Microsoft.OpenApi.Models.OpenApiReference
-                {
-                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            new string[] {}
-        }
-    });
-});
+// Configuração de serviços
+ConfigureServices(builder.Services, builder.Configuration);
 
 var app = builder.Build();
 
-// 8. Configura pipeline HTTP
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Dental Clinic API v1");
-        c.RoutePrefix = "swagger"; // URL: /swagger
-    });
-}
-
-// 9. Middleware padrão
-app.UseHttpsRedirection();
-
-// 10. Middleware de autenticação (adicione antes do UseAuthorization)
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.MapControllers();
-
-// 11. Cria o banco de dados se não existir (apenas para desenvolvimento)
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<ClinicContext>();
-    dbContext.Database.EnsureCreated(); // Substitua por migrações em produção
-}
+// Configuração do pipeline de requisições HTTP
+ConfigureApp(app);
 
 app.Run();
+
+// Método para configurar serviços
+void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+{
+    // Banco de dados
+    services.AddDbContext<ClinicContext>(options =>
+        options.UseOracle(configuration.GetConnectionString("OracleConnection")));
+
+    // Repositórios e serviços
+    RegisterRepositories(services);
+    RegisterServices(services);
+
+    // AutoMapper
+    services.AddAutoMapper(typeof(AutoMapperProfile));
+
+    // Autenticação JWT
+    ConfigureAuthentication(services, configuration);
+
+    // Controllers com Newtonsoft.Json
+    services.AddControllers()
+        .AddNewtonsoftJson();
+
+    // Swagger com documentação
+    ConfigureSwagger(services);
+}
+
+// Método para configurar o pipeline HTTP
+void ConfigureApp(WebApplication app)
+{
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "Dental Clinic API v1");
+            c.RoutePrefix = "swagger";
+        });
+    }
+
+    app.UseHttpsRedirection();
+    app.UseAuthentication();
+    app.UseAuthorization();
+    app.MapControllers();
+
+    // Cria o banco de dados se não existir (apenas para desenvolvimento)
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<ClinicContext>();
+        dbContext.Database.EnsureCreated();
+    }
+}
+
+// Método para registrar repositórios
+void RegisterRepositories(IServiceCollection services)
+{
+    // Registramos o repositório usando implementação concreta
+    services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+    services.AddScoped(typeof(IReadRepository<>), typeof(Repository<>));
+    services.AddScoped(typeof(IWriteRepository<>), typeof(Repository<>));
+}
+
+// Método para registrar serviços
+void RegisterServices(IServiceCollection services)
+{
+    // Registramos os serviços com suas implementações
+    services.AddScoped<IClinicService, ClinicService>();
+    services.AddScoped<IAuthService, AuthService>();
+
+    // As interfaces derivadas usam a mesma implementação
+    services.AddScoped<IAvailabilityService>(sp => sp.GetRequiredService<IClinicService>());
+    services.AddScoped<IAppointmentService>(sp => sp.GetRequiredService<IClinicService>());
+}
+
+// Método para configurar autenticação
+void ConfigureAuthentication(IServiceCollection services, IConfiguration configuration)
+{
+    services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(options => {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+                    .GetBytes(configuration.GetSection("AppSettings:Token").Value ??
+                             throw new InvalidOperationException("Token não configurado"))),
+                ValidateIssuer = false,
+                ValidateAudience = false
+            };
+        });
+}
+
+// Método para configurar Swagger
+void ConfigureSwagger(IServiceCollection services)
+{
+    services.AddSwaggerGen(c =>
+    {
+        c.SwaggerDoc("v1", new() { Title = "Dental Clinic API", Version = "v1" });
+        c.EnableAnnotations();
+
+        // Configuração do arquivo XML de documentação
+        var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+        var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
+        // Verifica se o arquivo XML existe antes de tentar incluí-lo
+        if (File.Exists(xmlPath))
+        {
+            c.IncludeXmlComments(xmlPath);
+        }
+
+        // Configuração JWT no Swagger
+        c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        {
+            Name = "Authorization",
+            Type = SecuritySchemeType.Http,
+            Scheme = "Bearer",
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Description = "JWT Authorization header usando o esquema Bearer. Digite 'Bearer' [espaço] e seu token."
+        });
+
+        c.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                },
+                Array.Empty<string>()
+            }
+        });
+    });
+}

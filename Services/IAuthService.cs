@@ -7,7 +7,6 @@ namespace DentalClinicAPI.Services
     {
         Task<AuthResponseDTO> Register(RegisterDTO registerDto);
         Task<AuthResponseDTO> Login(LoginDTO loginDto);
-        Task<User> GetUserByUsername(string username);
-        string CreateToken(User user);
+        Task<User?> GetUserByUsername(string username);
     }
 }

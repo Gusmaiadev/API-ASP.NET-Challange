@@ -1,7 +1,5 @@
-﻿using System.Linq; // Adicione para operações LINQ
-using DentalClinicAPI.Models;
+﻿using DentalClinicAPI.Models;
 using DentalClinicAPI.Repositories;
-using System.Threading.Tasks;
 
 namespace DentalClinicAPI.Services
 {
@@ -21,7 +19,6 @@ namespace DentalClinicAPI.Services
             _dentistRepo = dentistRepo;
         }
 
-        // Verifica disponibilidade do dentista
         public async Task<bool> IsDentistAvailable(int dentistId, DateTime date)
         {
             var dentist = await _dentistRepo.GetById(dentistId);
@@ -30,16 +27,15 @@ namespace DentalClinicAPI.Services
             var appointments = await _appointmentRepo.GetAll();
             return !appointments.Any(a =>
                 a.DentistId == dentistId &&
-                a.Date.Date == date.Date);
+                a.Date.Date == date.Date &&
+                a.Date.Hour == date.Hour);
         }
 
-        // Verifica existência do paciente
         public async Task<bool> PatientExists(int patientId)
         {
             return await _patientRepo.GetById(patientId) != null;
         }
 
-        // Obtém agendamentos por data
         public async Task<List<Appointment>> GetAppointmentsByDate(DateTime date)
         {
             var appointments = await _appointmentRepo.GetAll();
@@ -48,10 +44,13 @@ namespace DentalClinicAPI.Services
                 .ToList();
         }
 
-        // Obtém paciente com histórico
-        public async Task<Patient> GetPatientWithRecords(int id)
+        public Task<bool> IsAppointmentTimeValid(DateTime appointmentTime)
         {
-            return await _patientRepo.GetById(id);
+            // Verificar se o horário é válido (dentro do horário de funcionamento da clínica)
+            bool isWithinBusinessHours = appointmentTime.Hour >= 8 && appointmentTime.Hour < 18;
+            bool isWeekday = appointmentTime.DayOfWeek != DayOfWeek.Saturday && appointmentTime.DayOfWeek != DayOfWeek.Sunday;
+
+            return Task.FromResult(isWithinBusinessHours && isWeekday);
         }
     }
 }

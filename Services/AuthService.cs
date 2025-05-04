@@ -1,9 +1,7 @@
-﻿using System;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using DentalClinicAPI.Data;
 using DentalClinicAPI.DTOs;
 using DentalClinicAPI.Models;
@@ -15,7 +13,7 @@ namespace DentalClinicAPI.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly ClinicContext _context;
+        private readonly DbContext _context;
         private readonly IConfiguration _configuration;
 
         public AuthService(ClinicContext context, IConfiguration configuration)
@@ -28,7 +26,7 @@ namespace DentalClinicAPI.Services
         {
             if (await UserExists(registerDto.Username))
             {
-                throw new Exception("Username already exists");
+                throw new InvalidOperationException("Nome de usuário já existe");
             }
 
             CreatePasswordHash(registerDto.Password, out string passwordHash, out string passwordSalt);
@@ -39,13 +37,12 @@ namespace DentalClinicAPI.Services
                 Email = registerDto.Email,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
-                Role = "User" // Default role
+                Role = "User" // Role padrão
             };
 
-            _context.Users.Add(user);
+            _context.Set<User>().Add(user);
             await _context.SaveChangesAsync();
 
-            // Create token
             string token = CreateToken(user);
 
             return new AuthResponseDTO
@@ -59,21 +56,18 @@ namespace DentalClinicAPI.Services
 
         public async Task<AuthResponseDTO> Login(LoginDTO loginDto)
         {
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Username.ToLower() == loginDto.Username.ToLower());
+            var user = await GetUserByUsername(loginDto.Username);
 
             if (user == null)
             {
-                throw new Exception("User not found");
+                throw new InvalidOperationException("Usuário não encontrado");
             }
 
-            // Verifique a senha
             if (!VerifyPasswordHash(loginDto.Password, user.PasswordHash, user.PasswordSalt))
             {
-                throw new Exception("Wrong password");
+                throw new InvalidOperationException("Senha incorreta");
             }
 
-            // Crie o token
             string token = CreateToken(user);
 
             return new AuthResponseDTO
@@ -85,13 +79,13 @@ namespace DentalClinicAPI.Services
             };
         }
 
-        public async Task<User> GetUserByUsername(string username)
+        public async Task<User?> GetUserByUsername(string username)
         {
-            return await _context.Users
+            return await _context.Set<User>()
                 .FirstOrDefaultAsync(u => u.Username.ToLower() == username.ToLower());
         }
 
-        public string CreateToken(User user)
+        private string CreateToken(User user)
         {
             var claims = new List<Claim>
             {
@@ -100,7 +94,7 @@ namespace DentalClinicAPI.Services
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                _configuration.GetSection("AppSettings:Token").Value ?? throw new Exception("Token key not found in configuration")));
+                _configuration.GetSection("AppSettings:Token").Value ?? throw new InvalidOperationException("Token key não encontrada na configuração")));
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
@@ -117,15 +111,13 @@ namespace DentalClinicAPI.Services
 
         private async Task<bool> UserExists(string username)
         {
-            // Use .Count() > 0 em vez de .Any() para evitar problemas com Oracle
-            return await _context.Users.CountAsync(
+            return await _context.Set<User>().CountAsync(
                 u => u.Username.ToLower() == username.ToLower()) > 0;
         }
 
         private void CreatePasswordHash(string password, out string passwordHash, out string passwordSalt)
         {
             using var hmac = new HMACSHA512();
-            // Convertendo byte[] para string Base64
             passwordSalt = Convert.ToBase64String(hmac.Key);
             var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             passwordHash = Convert.ToBase64String(hash);
@@ -135,7 +127,6 @@ namespace DentalClinicAPI.Services
         {
             try
             {
-                // Convertendo string Base64 para byte[]
                 var saltBytes = Convert.FromBase64String(storedSalt);
                 using var hmac = new HMACSHA512(saltBytes);
                 var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
@@ -143,9 +134,8 @@ namespace DentalClinicAPI.Services
 
                 return computedHashString == storedHash;
             }
-            catch (Exception)
+            catch
             {
-                // Em caso de erro na conversão ou no processo, retorne falso para segurança
                 return false;
             }
         }

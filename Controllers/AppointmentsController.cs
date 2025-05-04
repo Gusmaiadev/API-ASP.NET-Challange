@@ -4,15 +4,13 @@ using DentalClinicAPI.Models;
 using DentalClinicAPI.Repositories;
 using DentalClinicAPI.Services;
 using AutoMapper;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 
 namespace DentalClinicAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize] // Protege todos os métodos deste controller
+    [Authorize]
     public class AppointmentsController : ControllerBase
     {
         private readonly IRepository<Appointment> _appointmentRepo;
@@ -34,10 +32,17 @@ namespace DentalClinicAPI.Controllers
         /// </summary>
         /// <returns>Lista de agendamentos</returns>
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<IEnumerable<AppointmentReadDTO>>> GetAll()
         {
-            var appointments = await _appointmentRepo.GetAll();
-            return Ok(_mapper.Map<IEnumerable<AppointmentReadDTO>>(appointments));
+            try
+            {
+                var appointments = await _appointmentRepo.GetAll();
+                return Ok(_mapper.Map<IEnumerable<AppointmentReadDTO>>(appointments));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno: {ex.Message}");
+            }
         }
 
         /// <summary>
@@ -46,12 +51,19 @@ namespace DentalClinicAPI.Controllers
         /// <param name="id">ID do agendamento</param>
         /// <returns>Detalhes do agendamento</returns>
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<ActionResult<AppointmentReadDTO>> GetById(int id)
         {
-            var appointment = await _appointmentRepo.GetById(id);
-            if (appointment == null) return NotFound();
+            try
+            {
+                var appointment = await _appointmentRepo.GetById(id);
+                if (appointment == null) return NotFound("Agendamento não encontrado");
 
-            return Ok(_mapper.Map<AppointmentReadDTO>(appointment));
+                return Ok(_mapper.Map<AppointmentReadDTO>(appointment));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno: {ex.Message}");
+            }
         }
 
         /// <summary>
@@ -60,23 +72,33 @@ namespace DentalClinicAPI.Controllers
         /// <param name="dto">Dados do agendamento</param>
         /// <returns>Agendamento criado</returns>
         [HttpPost]
-        public async Task<IActionResult> Create(AppointmentCreateDTO dto)
+        public async Task<ActionResult<AppointmentReadDTO>> Create(AppointmentCreateDTO dto)
         {
-            // Validações de negócio
-            if (!await _clinicService.IsDentistAvailable(dto.DentistId, dto.Date))
-                return Conflict("Dentista não disponível nesta data/hora");
+            try
+            {
+                // Validações de negócio
+                if (!await _clinicService.IsAppointmentTimeValid(dto.Date))
+                    return BadRequest("Horário fora do período de funcionamento da clínica");
 
-            if (!await _clinicService.PatientExists(dto.PatientId))
-                return NotFound("Paciente não encontrado");
+                if (!await _clinicService.IsDentistAvailable(dto.DentistId, dto.Date))
+                    return Conflict("Dentista não disponível nesta data/hora");
 
-            var appointment = _mapper.Map<Appointment>(dto);
-            await _appointmentRepo.Create(appointment);
+                if (!await _clinicService.PatientExists(dto.PatientId))
+                    return NotFound("Paciente não encontrado");
 
-            return CreatedAtAction(
-                nameof(GetById),
-                new { id = appointment.Id },
-                _mapper.Map<AppointmentReadDTO>(appointment)
-            );
+                var appointment = _mapper.Map<Appointment>(dto);
+                await _appointmentRepo.Create(appointment);
+
+                return CreatedAtAction(
+                    nameof(GetById),
+                    new { id = appointment.Id },
+                    _mapper.Map<AppointmentReadDTO>(appointment)
+                );
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno: {ex.Message}");
+            }
         }
 
         /// <summary>
@@ -88,20 +110,31 @@ namespace DentalClinicAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, AppointmentCreateDTO dto)
         {
-            var existingAppointment = await _appointmentRepo.GetById(id);
-            if (existingAppointment == null) return NotFound();
-
-            // Verifica se o dentista está disponível para o novo horário
-            if (existingAppointment.Date != dto.Date || existingAppointment.DentistId != dto.DentistId)
+            try
             {
-                if (!await _clinicService.IsDentistAvailable(dto.DentistId, dto.Date))
-                    return Conflict("Novo horário/dentista indisponível");
+                var existingAppointment = await _appointmentRepo.GetById(id);
+                if (existingAppointment == null) return NotFound("Agendamento não encontrado");
+
+                // Validação de horário comercial
+                if (!await _clinicService.IsAppointmentTimeValid(dto.Date))
+                    return BadRequest("Horário fora do período de funcionamento da clínica");
+
+                // Verifica se o dentista está disponível para o novo horário
+                if (existingAppointment.Date != dto.Date || existingAppointment.DentistId != dto.DentistId)
+                {
+                    if (!await _clinicService.IsDentistAvailable(dto.DentistId, dto.Date))
+                        return Conflict("Novo horário/dentista indisponível");
+                }
+
+                _mapper.Map(dto, existingAppointment);
+                await _appointmentRepo.Update(existingAppointment);
+
+                return NoContent();
             }
-
-            _mapper.Map(dto, existingAppointment);
-            await _appointmentRepo.Update(existingAppointment);
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno: {ex.Message}");
+            }
         }
 
         /// <summary>
@@ -112,8 +145,18 @@ namespace DentalClinicAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _appointmentRepo.Delete(id);
-            return NoContent();
+            try
+            {
+                var appointment = await _appointmentRepo.GetById(id);
+                if (appointment == null) return NotFound("Agendamento não encontrado");
+
+                await _appointmentRepo.Delete(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno: {ex.Message}");
+            }
         }
 
         /// <summary>
@@ -122,13 +165,20 @@ namespace DentalClinicAPI.Controllers
         /// <param name="date">Data no formato yyyy-MM-dd</param>
         /// <returns>Lista de agendamentos</returns>
         [HttpGet("by-date/{date}")]
-        public async Task<IActionResult> GetByDate(string date)
+        public async Task<ActionResult<IEnumerable<AppointmentReadDTO>>> GetByDate(string date)
         {
-            if (!DateTime.TryParse(date, out var parsedDate))
-                return BadRequest("Formato de data inválido");
+            try
+            {
+                if (!DateTime.TryParse(date, out var parsedDate))
+                    return BadRequest("Formato de data inválido");
 
-            var appointments = await _clinicService.GetAppointmentsByDate(parsedDate);
-            return Ok(_mapper.Map<IEnumerable<AppointmentReadDTO>>(appointments));
+                var appointments = await _clinicService.GetAppointmentsByDate(parsedDate);
+                return Ok(_mapper.Map<IEnumerable<AppointmentReadDTO>>(appointments));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno: {ex.Message}");
+            }
         }
     }
 }
