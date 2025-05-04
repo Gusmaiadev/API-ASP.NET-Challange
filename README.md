@@ -1,6 +1,6 @@
 Aqui está um README.md atualizado para seu projeto, incorporando as novas funcionalidades implementadas:
 
-```markdown
+
 # DentalClinicAPI
 
 ## 📌 Visão Geral
