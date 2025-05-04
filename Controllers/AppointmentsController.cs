@@ -6,11 +6,13 @@ using DentalClinicAPI.Services;
 using AutoMapper;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DentalClinicAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize] // Protege todos os métodos deste controller
     public class AppointmentsController : ControllerBase
     {
         private readonly IRepository<Appointment> _appointmentRepo;

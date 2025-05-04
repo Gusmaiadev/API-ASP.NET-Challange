@@ -17,5 +17,8 @@ public class AutoMapperProfile : Profile
 
         CreateMap<Appointment, AppointmentReadDTO>();
         CreateMap<AppointmentCreateDTO, Appointment>();
+
+        CreateMap<User, AuthResponseDTO>();
+        CreateMap<RegisterDTO, User>();
     }
 }

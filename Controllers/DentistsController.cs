@@ -5,11 +5,13 @@ using DentalClinicAPI.Repositories;
 using AutoMapper;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DentalClinicAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize] // Protege todos os métodos, requerendo apenas autenticação
     public class DentistsController : ControllerBase
     {
         private readonly IRepository<Dentist> _dentistRepo;
@@ -26,6 +28,7 @@ namespace DentalClinicAPI.Controllers
         /// </summary>
         /// <returns>Lista de dentistas</returns>
         [HttpGet]
+        [AllowAnonymous] // Permite acesso sem autenticação
         public async Task<IActionResult> GetAll()
         {
             var dentists = await _dentistRepo.GetAll();
@@ -38,6 +41,7 @@ namespace DentalClinicAPI.Controllers
         /// <param name="id">ID do dentista</param>
         /// <returns>Dados do dentista</returns>
         [HttpGet("{id}")]
+        [AllowAnonymous] // Permite acesso sem autenticação
         public async Task<IActionResult> GetById(int id)
         {
             var dentist = await _dentistRepo.GetById(id);
@@ -52,6 +56,7 @@ namespace DentalClinicAPI.Controllers
         /// <param name="dto">Dados do dentista (excluindo ID)</param>
         /// <returns>Dentista criado</returns>
         [HttpPost]
+        [Authorize] // Qualquer usuário autenticado pode criar
         public async Task<IActionResult> Create(DentistCreateDTO dto)
         {
             var dentist = _mapper.Map<Dentist>(dto);
@@ -71,6 +76,7 @@ namespace DentalClinicAPI.Controllers
         /// <param name="dto">Novos dados do dentista</param>
         /// <returns>Status 204 No Content</returns>
         [HttpPut("{id}")]
+        [Authorize] // Qualquer usuário autenticado pode atualizar
         public async Task<IActionResult> Update(int id, DentistCreateDTO dto)
         {
             var existingDentist = await _dentistRepo.GetById(id);
@@ -89,6 +95,7 @@ namespace DentalClinicAPI.Controllers
         /// <param name="id">ID do dentista</param>
         /// <returns>Status 204 No Content</returns>
         [HttpDelete("{id}")]
+        [Authorize] // Qualquer usuário autenticado pode excluir
         public async Task<IActionResult> Delete(int id)
         {
             await _dentistRepo.Delete(id);

@@ -2,10 +2,13 @@ using Microsoft.EntityFrameworkCore;
 using DentalClinicAPI.Data;
 using DentalClinicAPI.Repositories;
 using DentalClinicAPI.Services;
-using DentalClinicAPI.Mappings; // Adicione para o AutoMapperProfile
-using AutoMapper; // Adicione para suporte ao AutoMapper
-using Microsoft.AspNetCore.Mvc.NewtonsoftJson; // Adicione para Newtonsoft.Json
-using System.Reflection; // Adicione para obter informações do assembly
+using DentalClinicAPI.Mappings;
+using AutoMapper;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
+using System.Reflection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,12 +24,26 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 // 4. Registra serviços
 builder.Services.AddScoped<IClinicService, ClinicService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
-// 5. Configuração de controllers com Newtonsoft.Json
+// 5. Configuração do JWT
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options => {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
+
+// 6. Configuração de controllers com Newtonsoft.Json
 builder.Services.AddControllers()
     .AddNewtonsoftJson();
 
-// 6. Configuração do Swagger com documentação XML
+// 7. Configuração do Swagger com documentação XML
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new() { Title = "Dental Clinic API", Version = "v1" });
@@ -36,11 +53,37 @@ builder.Services.AddSwaggerGen(c =>
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     c.IncludeXmlComments(xmlPath);
+
+    // Adicionar configuração para incluir o token JWT no Swagger UI
+    c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Description = "JWT Authorization header usando o esquema Bearer. \r\n\r\n Digite 'Bearer' [espaço] e seu token.\r\n\r\nExemplo: \"Bearer 12345abcdef\""
+    });
+
+    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
 });
 
 var app = builder.Build();
 
-// 7. Configura pipeline HTTP
+// 8. Configura pipeline HTTP
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -51,12 +94,16 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-// 8. Middleware padrão
+// 9. Middleware padrão
 app.UseHttpsRedirection();
+
+// 10. Middleware de autenticação (adicione antes do UseAuthorization)
+app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 
-// 9. Cria o banco de dados se não existir (apenas para desenvolvimento)
+// 11. Cria o banco de dados se não existir (apenas para desenvolvimento)
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ClinicContext>();

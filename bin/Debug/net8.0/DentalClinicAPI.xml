@@ -46,6 +46,26 @@
             <param name="date">Data no formato yyyy-MM-dd</param>
             <returns>Lista de agendamentos</returns>
         </member>
+        <member name="M:DentalClinicAPI.Controllers.AuthController.Register(DentalClinicAPI.DTOs.RegisterDTO)">
+            <summary>
+            Registra um novo usuário
+            </summary>
+            <param name="registerDto">Dados do usuário</param>
+            <returns>Token de autenticação</returns>
+        </member>
+        <member name="M:DentalClinicAPI.Controllers.AuthController.Login(DentalClinicAPI.DTOs.LoginDTO)">
+            <summary>
+            Autentica um usuário
+            </summary>
+            <param name="loginDto">Credenciais do usuário</param>
+            <returns>Token de autenticação</returns>
+        </member>
+        <member name="M:DentalClinicAPI.Controllers.AuthController.GetCurrentUser">
+            <summary>
+            Obtém informações do usuário atual
+            </summary>
+            <returns>Dados do usuário autenticado</returns>
+        </member>
         <member name="M:DentalClinicAPI.Controllers.DentistsController.GetAll">
             <summary>
             Obtém todos os dentistas
@@ -126,6 +146,42 @@
             <inheritdoc />
         </member>
         <member name="M:DentalClinicAPI.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:DentalClinicAPI.Migrations.AddUserModel">
+            <inheritdoc />
+        </member>
+        <member name="M:DentalClinicAPI.Migrations.AddUserModel.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:DentalClinicAPI.Migrations.AddUserModel.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:DentalClinicAPI.Migrations.AddUserModel.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:DentalClinicAPI.Migrations.AddUserModelFixed">
+            <inheritdoc />
+        </member>
+        <member name="M:DentalClinicAPI.Migrations.AddUserModelFixed.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:DentalClinicAPI.Migrations.AddUserModelFixed.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:DentalClinicAPI.Migrations.AddUserModelFixed.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:DentalClinicAPI.Migrations.AddUserModelOracle">
+            <inheritdoc />
+        </member>
+        <member name="M:DentalClinicAPI.Migrations.AddUserModelOracle.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:DentalClinicAPI.Migrations.AddUserModelOracle.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:DentalClinicAPI.Migrations.AddUserModelOracle.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

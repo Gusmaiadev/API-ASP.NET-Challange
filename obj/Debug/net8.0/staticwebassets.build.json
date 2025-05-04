@@ -1,11 +1,12 @@
 {
   "Version": 1,
-  "Hash": "2drXfTr7FtzRxykWkkIlfyLn9P4/3dklL8RE3f20pio=",
+  "Hash": "VL2CdE0G1NFfAG7HDtNHSHLyu2xHL0buviGKaM7xIJg=",
   "Source": "DentalClinicAPI",
   "BasePath": "_content/DentalClinicAPI",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
   "DiscoveryPatterns": [],
-  "Assets": []
+  "Assets": [],
+  "Endpoints": []
 }
