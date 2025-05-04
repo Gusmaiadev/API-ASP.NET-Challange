@@ -177,4 +177,3 @@ Implementamos inteligência artificial para otimizar o agendamento de consultas:
 - **Nome:** Rafael Vida Fernandes **RM:** 553721
 - **Nome:** Kauã Almeida Silveira **RM:** 552618
 - **Turma:** 2TDSPS
-```
