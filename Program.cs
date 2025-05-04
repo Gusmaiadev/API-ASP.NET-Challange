@@ -91,6 +91,9 @@ void RegisterServices(IServiceCollection services)
     // As interfaces derivadas usam a mesma implementação
     services.AddScoped<IAvailabilityService>(sp => sp.GetRequiredService<IClinicService>());
     services.AddScoped<IAppointmentService>(sp => sp.GetRequiredService<IClinicService>());
+
+    // Adicionar o serviço de ML.NET
+    services.AddScoped<IMLService, MLService>();
 }
 
 // Método para configurar autenticação

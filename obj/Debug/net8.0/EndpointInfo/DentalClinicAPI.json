@@ -528,6 +528,115 @@
         }
       }
     },
+    "/api/MLRecommendation/train": {
+      "post": {
+        "tags": [
+          "MLRecommendation"
+        ],
+        "summary": "Treina o modelo de machine learning com dados históricos",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/MLRecommendation/recommend": {
+      "get": {
+        "tags": [
+          "MLRecommendation"
+        ],
+        "summary": "Recomenda melhores horários para consulta com base em histórico",
+        "parameters": [
+          {
+            "name": "patientId",
+            "in": "query",
+            "description": "ID do paciente",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "specialty",
+            "in": "query",
+            "description": "Especialidade odontológica",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TimeSlotRecommendation"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TimeSlotRecommendation"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TimeSlotRecommendation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/MLRecommendation/predict-attendance": {
+      "post": {
+        "tags": [
+          "MLRecommendation"
+        ],
+        "summary": "Verifica a probabilidade de comparecimento do paciente",
+        "requestBody": {
+          "description": "Dados da consulta para previsão",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppointmentData"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppointmentData"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppointmentData"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppointmentData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Patients": {
       "get": {
         "tags": [
@@ -698,6 +807,35 @@
         },
         "additionalProperties": false
       },
+      "AppointmentData": {
+        "type": "object",
+        "properties": {
+          "dayOfWeek": {
+            "type": "number",
+            "format": "float"
+          },
+          "hourOfDay": {
+            "type": "number",
+            "format": "float"
+          },
+          "month": {
+            "type": "number",
+            "format": "float"
+          },
+          "specialtyCode": {
+            "type": "number",
+            "format": "float"
+          },
+          "hasMissedBefore": {
+            "type": "number",
+            "format": "float"
+          },
+          "patientAttended": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "AppointmentReadDTO": {
         "type": "object",
         "properties": {
@@ -814,6 +952,28 @@
           "password": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TimeSlotRecommendation": {
+        "type": "object",
+        "properties": {
+          "dayOfWeek": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hour": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "score": {
+            "type": "number",
+            "format": "float"
           }
         },
         "additionalProperties": false

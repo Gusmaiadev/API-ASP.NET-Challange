@@ -101,6 +101,27 @@
             <param name="id">ID do dentista</param>
             <returns>Status 204 No Content</returns>
         </member>
+        <member name="M:DentalClinicAPI.Controllers.MLRecommendationController.TrainModel">
+            <summary>
+            Treina o modelo de machine learning com dados históricos
+            </summary>
+            <returns>Confirmação de treinamento</returns>
+        </member>
+        <member name="M:DentalClinicAPI.Controllers.MLRecommendationController.GetRecommendedTimeSlots(System.Int32,System.String)">
+            <summary>
+            Recomenda melhores horários para consulta com base em histórico
+            </summary>
+            <param name="patientId">ID do paciente</param>
+            <param name="specialty">Especialidade odontológica</param>
+            <returns>Lista de horários recomendados</returns>
+        </member>
+        <member name="M:DentalClinicAPI.Controllers.MLRecommendationController.PredictAttendance(DentalClinicAPI.Models.AppointmentData)">
+            <summary>
+            Verifica a probabilidade de comparecimento do paciente
+            </summary>
+            <param name="data">Dados da consulta para previsão</param>
+            <returns>Probabilidade de comparecimento</returns>
+        </member>
         <member name="M:DentalClinicAPI.Controllers.PatientsController.GetAll">
             <summary>
             Obtém todos os pacientes

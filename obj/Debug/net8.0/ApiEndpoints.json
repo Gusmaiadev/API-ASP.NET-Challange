@@ -276,6 +276,63 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "DentalClinicAPI.Controllers.MLRecommendationController",
+    "Method": "PredictAttendance",
+    "RelativePath": "api/MLRecommendation/predict-attendance",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "DentalClinicAPI.Models.AppointmentData",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "DentalClinicAPI.Controllers.MLRecommendationController",
+    "Method": "GetRecommendedTimeSlots",
+    "RelativePath": "api/MLRecommendation/recommend",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "patientId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "specialty",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[DentalClinicAPI.Models.TimeSlotRecommendation, DentalClinicAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "DentalClinicAPI.Controllers.MLRecommendationController",
+    "Method": "TrainModel",
+    "RelativePath": "api/MLRecommendation/train",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "DentalClinicAPI.Controllers.PatientsController",
     "Method": "GetAll",
     "RelativePath": "api/Patients",
